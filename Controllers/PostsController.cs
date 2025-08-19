@@ -41,7 +41,7 @@ namespace BlogsAPI.Controllers
         }
 
         [HttpPost()]
-        [Route("addpost")]
+        [Route("Add")]
         public  ActionResult<Post> AddPost(AddpostDTO postDTO)
         {
            
@@ -54,7 +54,7 @@ namespace BlogsAPI.Controllers
 
         }
 
-        [HttpPut("updata/{id}")]
+        [HttpPut("Update/{id}")]
         public ActionResult<Post> UpdatePost(int id, UpdatePostDTO newPost)
         {
             if (id != newPost.Id)
@@ -72,7 +72,7 @@ namespace BlogsAPI.Controllers
             }
         }
 
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("Delete/{id}")]
         public IActionResult DeletePost(int id)
         {
             try

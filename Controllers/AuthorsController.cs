@@ -18,7 +18,6 @@ namespace BlogsAPI.Controllers
 
         // This controller handles requests related to authors in the blogging API.
         [HttpGet]
-        [Route("/authors")]
         public  ActionResult<List<Author>> GetAuthors()
         {
             try { 
@@ -68,6 +67,7 @@ namespace BlogsAPI.Controllers
 
 
         [HttpPost]
+        [Route("Add")]
         public ActionResult<Author> AddAuthor([FromBody] AddAuthorDTO authorDto)
         {
             try
@@ -84,7 +84,7 @@ namespace BlogsAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [HttpPut("{id}")]
+        [HttpPut("Update/{id}")]
         public ActionResult UpdateAuthor(int id, [FromBody] UpdateAuthorDTO updateAuthorDto)
         {
             try
@@ -101,7 +101,7 @@ namespace BlogsAPI.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public ActionResult DeleteAuthor(int id)
         {
             try

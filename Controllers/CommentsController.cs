@@ -49,7 +49,7 @@ namespace BlogsAPI.Controllers
         }
 
         [HttpPost]
-        [Route("addComment")]
+        [Route("Add")]
 
         public ActionResult<Comment> AddComment(AddCommentDTO comment) {
 
@@ -67,7 +67,7 @@ namespace BlogsAPI.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateComment/{id}")]
+        [Route("Update/{id}")]
         public ActionResult<Comment> UpdateComment(int id,UpdateCommentDTO comment)
         {
             if (id != comment.Id)
