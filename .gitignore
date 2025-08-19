@@ -1,1 +1,20 @@
-ECHO is on.
+# Build Folders and files
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio files
+*.suo
+*.user
+*.pdb
+*.vs/
+*.vshost.*
+[Dd]ebug.log
+*.json
+
+# NuGet Packages
+*.nupkg
+.nuget/
+.vs/
+packages/

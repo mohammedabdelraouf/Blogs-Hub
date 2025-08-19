@@ -1,0 +1,6 @@
+@BlogsAPI_HostAddress = http://localhost:5145
+
+GET {{BlogsAPI_HostAddress}}/authors/
+Accept: application/json
+
+###
