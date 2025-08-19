@@ -27,9 +27,13 @@
         public Post(AddpostDTO post) {
            
             this.Content = post.Content;
+
             this.AuthorId = post.AuthorId;
+
             this.Title = post.Title;
+
             this.UpdatedDate= DateTime.Now;
+
             this.CreatedDate= DateTime.Now;
         }
 

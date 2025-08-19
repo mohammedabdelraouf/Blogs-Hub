@@ -4,3 +4,8 @@ GET {{BlogsAPI_HostAddress}}/authors/
 Accept: application/json
 
 ###
+
+GET {{BlogsAPI_HostAddress}}/authors/2
+Accept: application/json
+
+###

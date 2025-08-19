@@ -42,15 +42,20 @@ namespace BlogsAPI.Controllers
 
         [HttpPost()]
         [Route("addpost")]
-        public  void AddPost(AddpostDTO postDTO)
+        public  ActionResult<Post> AddPost(AddpostDTO postDTO)
         {
-
-             _postsService.AddPost(postDTO);
+           
+            if (postDTO == null)
+            {
+                return BadRequest("Post can't be null");
+            }
+            
+            return  Ok(_postsService.AddPost(postDTO));
 
         }
 
         [HttpPut("updata/{id}")]
-        public IActionResult UpdatePost(int id, UpdatePostDTO newPost)
+        public ActionResult<Post> UpdatePost(int id, UpdatePostDTO newPost)
         {
             if (id != newPost.Id)
             {
@@ -58,8 +63,8 @@ namespace BlogsAPI.Controllers
             }
             try
             {
-                _postsService.UpdatePost(id, newPost);
-                return NoContent(); // 204 No Content
+                var post  =  _postsService.UpdatePost(id, newPost);
+                return Ok(post); 
             }
             catch (Exception ex)
             {

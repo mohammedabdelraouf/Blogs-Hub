@@ -50,8 +50,25 @@ namespace BlogsAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("{id}/Posts")]
+        public async Task<ActionResult<List<Post>>> GetPostsByAuthorId(int id)
+        {
+
+            try {
+
+                return  Ok(await _authorsService.GetPosts(id));
+            }
+            catch (Exception ex) {
+
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+
+        }
+
+
         [HttpPost]
-        public ActionResult<Author> AddAuthor([FromBody] AuthorDTO authorDto)
+        public ActionResult<Author> AddAuthor([FromBody] AddAuthorDTO authorDto)
         {
             try
             {

@@ -7,7 +7,9 @@
     {
         public IEnumerable<Author> GetAllAuthors();
         public Task<Author?> GetAuthor(int id);
-        public Author AddAuthor(AuthorDTO author);
+
+        public  Task<IEnumerable<Post>> GetPosts(int AuthorId);
+        public Author AddAuthor(AddAuthorDTO author);
         public void UpdateAuthor(int id, UpdateAuthorDTO updateAuthor);
         public void DeleteAuthor(int id);
 
@@ -28,7 +30,7 @@
         {
             return await _context.Authors.FindAsync(id);
         }
-        public Author AddAuthor(AuthorDTO author)
+        public Author AddAuthor(AddAuthorDTO author)
         {
             var newAuthor = new Author(author);
             _context.Authors.Add(newAuthor);
@@ -61,6 +63,13 @@
                 _context.Authors.Remove(author);
                 _context.SaveChanges();
             }
+        }
+
+
+        public async Task<IEnumerable<Post>> GetPosts(int AuthorId) {
+
+            return _context.Posts
+                .Where(P => P.AuthorId == AuthorId);
         }
 
     }

@@ -12,7 +12,7 @@ namespace BlogsAPI.Services
         IEnumerable<Post> GetAllPosts();
         Task<Post?> GetPost(int id);
         Post AddPost(AddpostDTO post);
-        void UpdatePost(int id, UpdatePostDTO newPost);
+        Post UpdatePost(int id, UpdatePostDTO newPost);
         void DeletePost(int id);
     }
     public class PostsService : IPostsService
@@ -71,7 +71,7 @@ namespace BlogsAPI.Services
         }
 
 
-        public  void UpdatePost(int id, UpdatePostDTO newPost)
+        public  Post UpdatePost(int id, UpdatePostDTO newPost)
         {
             try
             {
@@ -82,6 +82,7 @@ namespace BlogsAPI.Services
                 post.Content = newPost.Content;
                 post.UpdatedDate = DateTime.Now; // Update the timestamp
                  _context.SaveChangesAsync();
+                return post;
             }
             catch (Exception ex)
             {

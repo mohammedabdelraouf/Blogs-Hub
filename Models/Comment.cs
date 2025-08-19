@@ -4,6 +4,10 @@
     /*
      * Comments (Id, Content, CreatedDate, PostId, AuthorId) 
      */
+
+    //Handling DTOs for adding and update
+    public record AddCommentDTO(string Content, int AuthorId, int PostId);
+    public record UpdateCommentDTO(int Id, string Content);
     public class Comment
     {
         public int Id { get; set; }

@@ -4,7 +4,7 @@
      * Authors (Id, Name, Email, Bio, JoinDate)– 
      */
 
-    public record AuthorDTO(string Name, string Email, string Bio);
+    public record AddAuthorDTO(string Name, string Email, string Bio);
     public record UpdateAuthorDTO (string Name , string Bio);
     public class Author
     {
@@ -26,7 +26,7 @@
         {
         }
         // Constructor to initialize an Author with an AuthorDTO
-        public Author(AuthorDTO author)
+        public Author(AddAuthorDTO author)
         {
             this.Name = author.Name;
             this.Email = author.Email;

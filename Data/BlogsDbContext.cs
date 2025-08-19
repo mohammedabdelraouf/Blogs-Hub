@@ -18,34 +18,43 @@ namespace BlogsAPI.Data
             // Configure the Post entity
             modelBuilder.Entity<Post>()
                 .HasKey(p => p.Id);
+
             modelBuilder.Entity<Post>()
                 .Property(p => p.Title)
                 .IsRequired()
                 .HasMaxLength(200);
+
             modelBuilder.Entity<Post>()
                 .Property(p => p.Content)
                 .IsRequired();
+
             modelBuilder.Entity<Post>()
                 .Property(p => p.CreatedDate)
                 .IsRequired();
+
             modelBuilder.Entity<Post>()
                 .Property(p => p.UpdatedDate)
                 .IsRequired();
 
+
             // Configure the Author entity
             modelBuilder.Entity<Author>()
                 .HasKey(a => a.Id);
+
             modelBuilder.Entity<Author>()
                 .Property(a => a.Name)
                 .IsRequired()
                 .HasMaxLength(100);
+
             modelBuilder.Entity<Author>()
                 .Property(a => a.Email)
                 .IsRequired()
                 .HasMaxLength(100);
+
             modelBuilder.Entity<Author>()
                 .Property(a => a.Bio)
                 .HasMaxLength(500);
+
             modelBuilder.Entity<Author>()
                 .Property(a => a.JoinDate)
                 .IsRequired();
@@ -53,37 +62,34 @@ namespace BlogsAPI.Data
             // Configure the Comment entity
             modelBuilder.Entity<Comment>()
                 .HasKey(c => c.Id);
+
             modelBuilder.Entity<Comment>()
                 .Property(c => c.Content)
                 .IsRequired();
+
             modelBuilder.Entity<Comment>()
                 .Property(c => c.CreatedDate)
                 .IsRequired();
 
 
             // Relationships
-
-
             // Author–Post: If an Author is deleted, their Posts are also deleted
             modelBuilder.Entity<Post>()
                     .HasOne(p => p.Author)
                     .WithMany(a => a.Posts)
-                    .HasForeignKey(p => p.AuthorId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .HasForeignKey(p => p.AuthorId);
 
             // Author–Comment: If an Author is deleted, their Comments are also deleted
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Author)
                 .WithMany(a => a.Comments)
-                .HasForeignKey(c => c.AuthorId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(c => c.AuthorId);
 
             // Post–Comment: If a Post is deleted, its Comments are also deleted
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.Post)
                 .WithMany(p => p.Comments)
-                .HasForeignKey(c => c.PostId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(c => c.PostId);
 
 
             modelBuilder.Entity<Author>().HasData(
