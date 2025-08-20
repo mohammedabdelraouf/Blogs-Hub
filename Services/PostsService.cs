@@ -11,6 +11,7 @@ namespace BlogsAPI.Services
         // Define methods that the PostsService should implement
         IEnumerable<Post> GetAllPosts();
         Task<Post?> GetPost(int id);
+        IEnumerable<Comment> GetCommentsByPostId(int postId);
         Post AddPost(AddpostDTO post);
         Post UpdatePost(int id, UpdatePostDTO newPost);
         void DeletePost(int id);
@@ -49,6 +50,20 @@ namespace BlogsAPI.Services
             {
                 // Handle exceptions as needed
                 throw new Exception($"An error occurred while retrieving the post with ID {id}.", ex);
+            }
+        }
+
+        public IEnumerable<Comment> GetCommentsByPostId(int postId)
+        {
+            try
+            {
+                var comments = _context.Comments.Where(c => c.PostId == postId).ToList();
+                return comments;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions as needed
+                throw new Exception($"An error occurred while retrieving comments for post ID {postId}.", ex);
             }
         }
         public Post AddPost(AddpostDTO PostDTO)
@@ -111,5 +126,7 @@ namespace BlogsAPI.Services
                 throw new Exception("An error occurred while deleting the post.", ex);
             }
         }
+
+       
     }
 }

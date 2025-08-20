@@ -16,19 +16,19 @@ namespace BlogsAPI.Controllers
         }
 
         [HttpGet]
-        public  ActionResult<IEnumerable<Post>> GetPosts()
+        public ActionResult<IEnumerable<Post>> GetPosts()
         {
             try
             {
-                return  Ok( _postsService.GetAllPosts());
+                return Ok(_postsService.GetAllPosts());
             }
             catch (Exception ex)
             {
-              return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
-            
+
         }
-        
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Post>> GetPost(int id)
         {
@@ -42,15 +42,15 @@ namespace BlogsAPI.Controllers
 
         [HttpPost()]
         [Route("Add")]
-        public  ActionResult<Post> AddPost(AddpostDTO postDTO)
+        public ActionResult<Post> AddPost(AddpostDTO postDTO)
         {
-           
+
             if (postDTO == null)
             {
                 return BadRequest("Post can't be null");
             }
-            
-            return  Ok(_postsService.AddPost(postDTO));
+
+            return Ok(_postsService.AddPost(postDTO));
 
         }
 
@@ -63,8 +63,8 @@ namespace BlogsAPI.Controllers
             }
             try
             {
-                var post  =  _postsService.UpdatePost(id, newPost);
-                return Ok(post); 
+                var post = _postsService.UpdatePost(id, newPost);
+                return Ok(post);
             }
             catch (Exception ex)
             {
@@ -79,6 +79,23 @@ namespace BlogsAPI.Controllers
             {
                 _postsService.DeletePost(id);
                 return NoContent(); // 204 No Content
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        [HttpGet("{postId}/Comments")]
+        public ActionResult<IEnumerable<Comment>> GetCommentsByPostId(int postId)
+        {
+            try
+            {
+                var comments = _postsService.GetCommentsByPostId(postId);
+                if (comments == null || !comments.Any())
+                {
+                    return NotFound();
+                }
+                return Ok(comments);
             }
             catch (Exception ex)
             {

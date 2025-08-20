@@ -18,6 +18,16 @@ builder.Services.AddScoped<IPostsService, PostsService>();
 builder.Services.AddScoped<IAuthorsService, AuthorsService>();
 builder.Services.AddScoped<ICommentsService, CommentsService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policy =>
+        {
+            policy.WithOrigins("http://127.0.0.1:5500") // to allow react
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
@@ -30,6 +40,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+// Enable CORS using the policy you defined
+app.UseCors("AllowSpecificOrigin");
 
 app.MapControllers();
 
