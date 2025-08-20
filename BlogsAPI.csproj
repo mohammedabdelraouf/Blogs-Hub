@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="OpenAPI Documentaion.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="OpenAPI Documentaion.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
