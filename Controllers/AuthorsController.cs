@@ -18,100 +18,137 @@ namespace BlogsAPI.Controllers
 
         // This controller handles requests related to authors in the blogging API.
         [HttpGet]
-        public  ActionResult<List<Author>> GetAuthors()
+        public  ActionResult<ResultViewModel<IEnumerable<Author>>> GetAuthors()
         {
+            var result = new ResultViewModel<IEnumerable<Author>>();
             try { 
-                var authors = _authorsService.GetAllAuthors();
-                return Ok(authors);
+                result.Data = _authorsService.GetAllAuthors();
+                result.IsSuccess = true;
+                result.Message = "Authors retrieved successfully";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
+
             }
 
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Author>> GetAuthor(int id)
+        public async Task<ActionResult<ResultViewModel<Author>>> GetAuthor(int id)
         {
+            var result = new ResultViewModel<Author>();
             try
             {
-                var author = await _authorsService.GetAuthor(id);
-                if (author == null)
+                result.Data = await _authorsService.GetAuthor(id);
+    
+                if (result.Data == null)
                 {
-                    return NotFound();
+                    result.IsSuccess = false;
+                    result.Message = "Author not found";
+                    return NotFound(result);
                 }
-                return Ok(author);
+                result.IsSuccess = true;
+                result.Message = "Author retrieved successfully";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
             }
         }
 
         [HttpGet]
         [Route("{id}/Posts")]
-        public async Task<ActionResult<List<Post>>> GetPostsByAuthorId(int id)
+        public async Task<ActionResult<ResultViewModel<IEnumerable<Post>>>> GetPostsByAuthorId(int id)
         {
-
-            try {
-
-                return  Ok(await _authorsService.GetPosts(id));
+            var result = new ResultViewModel<IEnumerable<Post>>();
+            try
+            {
+                result.Data = await _authorsService.GetPosts(id);
+                result.IsSuccess = true;
+                result.Message = "Posts retrieved successfully";
+                return Ok(result);
             }
-            catch (Exception ex) {
-
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Message = $"Internal server error: {ex.Message}";
+                return StatusCode(500, result);
             }
-
         }
 
 
         [HttpPost]
         [Route("Add")]
-        public ActionResult<Author> AddAuthor([FromBody] AddAuthorDTO authorDto)
+        public ActionResult<ResultViewModel<Author>> AddAuthor([FromBody] AddAuthorDTO authorDto)
         {
+            var result = new ResultViewModel<Author>();
             try
             {
                 if (authorDto == null)
                 {
-                    return BadRequest("Author data is null.");
+                    result.IsSuccess = false;
+                    result.Message = "Author data is null.";
+                    return BadRequest(result);
                 }
-                var newAuthor = _authorsService.AddAuthor(authorDto);
-                return CreatedAtAction(nameof(GetAuthor), new { id = newAuthor.Id }, newAuthor);
+
+                result.Data = _authorsService.AddAuthor(authorDto);
+                return CreatedAtAction(nameof(GetAuthor), new { id = result.Data.Id }, result.Data);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
             }
         }
+
         [HttpPut("Update/{id}")]
-        public ActionResult UpdateAuthor(int id, [FromBody] UpdateAuthorDTO updateAuthorDto)
+        public ActionResult<ResultViewModel<Author>> UpdateAuthor(int id, [FromBody] UpdateAuthorDTO updateAuthorDto)
         {
+            var result = new ResultViewModel<Author>();
             try
             {
                 if (updateAuthorDto == null)
                 {
-                    return BadRequest("Update data is null.");
+                    result.IsSuccess = false;
+                    result.Message = "Update data is null.";
+                    return BadRequest(result);
                 }
-                _authorsService.UpdateAuthor(id, updateAuthorDto);
-                return NoContent();
+
+                result.Data = _authorsService.UpdateAuthor(id, updateAuthorDto);
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
             }
         }
         [HttpDelete("Delete/{id}")]
-        public ActionResult DeleteAuthor(int id)
+        public ActionResult<ResultViewModel> DeleteAuthor(int id)
         {
+            var result = new ResultViewModel();
             try
             {
+                
                 _authorsService.DeleteAuthor(id);
-                return NoContent();
+                result.IsSuccess = true;
+                result.Message = "Author deleted successfully";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
             }
         }
 

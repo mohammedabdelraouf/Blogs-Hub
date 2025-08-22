@@ -16,90 +16,146 @@ namespace BlogsAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Post>> GetPosts()
+        public ActionResult<ResultViewModel<IEnumerable<Post>>> GetPosts()
         {
+            var result = new ResultViewModel<IEnumerable<Post>>();
             try
             {
-                return Ok(_postsService.GetAllPosts());
+                result.Data = _postsService.GetAllPosts();
+                result.IsSuccess = true;
+                result.Message = "Posts retrieved successfully";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
             }
 
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(int id)
+        public async Task<ActionResult<ResultViewModel<Post>>> GetPost(int id)
         {
-            var post = await _postsService.GetPost(id);
-            if (post == null)
+            var result = new ResultViewModel<Post>();
+
+            try
             {
-                return NotFound();
+                result.Data = await _postsService.GetPost(id);
+                result.IsSuccess = result.Data != null;
+                if (result.Data == null)
+                {
+                    return NotFound(result);
+                }
+                return Ok(result);
             }
-            return Ok(post);
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Message = $"Internal server error: {ex.Message}";
+                return StatusCode(500, result);
+            }
+            
         }
 
         [HttpPost()]
         [Route("Add")]
-        public ActionResult<Post> AddPost(AddpostDTO postDTO)
+        public ActionResult<ResultViewModel<Post>> AddPost(AddpostDTO postDTO)
         {
+            var result = new ResultViewModel<Post>();
 
-            if (postDTO == null)
-            {
-                return BadRequest("Post can't be null");
+            try {
+
+                if (postDTO == null)
+                {
+                    result.IsSuccess = false;
+                    result.Message = "Post can't be null";
+                    return BadRequest(result);
+                }
+                result.Data = _postsService.AddPost(postDTO); 
+                result.Message = "Post added successfully";
+                result.IsSuccess = true;
+                return Ok(result);
             }
-
-            return Ok(_postsService.AddPost(postDTO));
+            catch (Exception ex)
+            {
+                result.IsSuccess = false;
+                result.Message = $"Internal server error: {ex.Message}";
+                return StatusCode(500, result);
+            }
 
         }
 
         [HttpPut("Update/{id}")]
-        public ActionResult<Post> UpdatePost(int id, UpdatePostDTO newPost)
+        public ActionResult<ResultViewModel<Post>> UpdatePost(int id, UpdatePostDTO newPost)
         {
-            if (id != newPost.Id)
-            {
-                return BadRequest("Post ID mismatch.");
-            }
+            var result = new ResultViewModel<Post>();
+            
             try
             {
-                var post = _postsService.UpdatePost(id, newPost);
-                return Ok(post);
+                if (id != newPost.Id)
+                {
+                    result.IsSuccess = false;
+                    result.Message = "Post ID mismatch.";
+                    return BadRequest(result);
+                }
+                result.Data = _postsService.UpdatePost(id, newPost);
+                result.IsSuccess = true;
+                result.Message = "Post updated successfully";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = $"Internal server error: {ex.Message}";
+                return StatusCode(500, result);
+
             }
         }
 
         [HttpDelete("Delete/{id}")]
-        public IActionResult DeletePost(int id)
+        public ActionResult<ResultViewModel> DeletePost(int id)
         {
+            var result = new ResultViewModel();
+
             try
             {
                 _postsService.DeletePost(id);
-                return NoContent(); // 204 No Content
+                result.IsSuccess = true;
+                result.Message = "Post deleted successfully";
+                return Ok(result); 
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = $"Internal server error: {ex.Message}";
+                return StatusCode(500, result);
             }
         }
         [HttpGet("{postId}/Comments")]
-        public ActionResult<IEnumerable<Comment>> GetCommentsByPostId(int postId)
+        public ActionResult<ResultViewModel<IEnumerable<Comment>>> GetCommentsByPostId(int postId)
         {
+            var result = new ResultViewModel<IEnumerable<Comment>>();
             try
             {
-                var comments = _postsService.GetCommentsByPostId(postId);
-                if (comments == null || !comments.Any())
+                 result.Data = _postsService.GetCommentsByPostId(postId);
+                if (result.Data == null || !result.Data.Any())
                 {
-                    return NotFound();
+                    result.IsSuccess = false;
+                    result.Message = "No comments found for this post.";
+                    return NotFound(result);
                 }
-                return Ok(comments);
+                result.IsSuccess = true;
+                result.Message = "Comments retrieved successfully";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = $"Internal server error: {ex.Message}";
+                return StatusCode(500, result);
+
             }
         }
     }

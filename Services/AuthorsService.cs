@@ -10,7 +10,7 @@
 
         public  Task<IEnumerable<Post>> GetPosts(int AuthorId);
         public Author AddAuthor(AddAuthorDTO author);
-        public void UpdateAuthor(int id, UpdateAuthorDTO updateAuthor);
+        public Author UpdateAuthor(int id, UpdateAuthorDTO updateAuthor);
         public void DeleteAuthor(int id);
 
 
@@ -37,7 +37,7 @@
             _context.SaveChanges();
             return newAuthor;
         }
-        public void UpdateAuthor(int id, UpdateAuthorDTO updateAuthor)
+        public Author UpdateAuthor(int id, UpdateAuthorDTO updateAuthor)
         {
             var author = _context.Authors.Find(id);
             if (author != null)
@@ -45,7 +45,9 @@
                 author.Name = updateAuthor.Name;
                 author.Bio = updateAuthor.Bio;
                 _context.SaveChanges();
+                return author;
             }
+            throw new KeyNotFoundException($"Author with ID {id} not found.");
         }
         public void DeleteAuthor(int id)
         {

@@ -16,51 +16,69 @@ namespace BlogsAPI.Controllers
 
         // get all comments
         [HttpGet]
-        public  ActionResult<List<Comment>>  GetAllComments()
+        public  ActionResult<ResultViewModel<IEnumerable<Comment>>>  GetAllComments()
         {
+            var result = new ResultViewModel<IEnumerable<Comment>>();  
             try
             {
-                return Ok(_commentsService.GetAllComments());
+                result.Data = _commentsService.GetAllComments();
+                result.IsSuccess = true;
+                result.Message = "Comments retrieved successfully.";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
             }
         }
 
         [HttpGet]
         [Route("{id}")]
 
-        public ActionResult<Comment> GetCommentById(int id)
+        public ActionResult<ResultViewModel<Comment>> GetCommentById(int id)
         {
+            var result = new ResultViewModel<Comment>();
             try
             {
-                var comment = _commentsService.GetCommentById(id);
-                return Ok(comment);
+                result.Data = _commentsService.GetCommentById(id);
+                result.IsSuccess = true;
+                result.Message = "Comment retrieved successfully.";
+                return Ok(result);
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return NotFound(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
             }
         }
 
         [HttpPost]
         [Route("Add")]
 
-        public ActionResult<Comment> AddComment(AddCommentDTO comment) {
-
+        public ActionResult<ResultViewModel<Comment>> AddComment(AddCommentDTO comment) 
+        {
+            var result = new ResultViewModel<Comment>();
             try
             {
-                var addedComment =  _commentsService.AddComment(comment);
-                return Ok(addedComment);
+                result.Data = _commentsService.AddComment(comment);
+                result.IsSuccess = true;
+                result.Message = "Comment added successfully.";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
 
             }
 
@@ -68,36 +86,48 @@ namespace BlogsAPI.Controllers
 
         [HttpPut]
         [Route("Update/{id}")]
-        public ActionResult<Comment> UpdateComment(int id,UpdateCommentDTO comment)
+        public ActionResult<ResultViewModel<Comment>> UpdateComment([FromRoute]int id,[FromBody] UpdateCommentDTO comment)
         {
-            if (id != comment.Id)
-            {
-                return BadRequest("Post ID mismatch.");
-            }
+           var result = new ResultViewModel<Comment>();
             try
             {
-                var commentUpdated = _commentsService.UpdateComment(id, comment);
-                return Ok(commentUpdated);
+                if (id != comment.Id)
+                {
+                    result.IsSuccess = false;
+                    result.Message = "Comment ID mismatch.";
+                    return BadRequest(result);
+                }
+                result.Data = _commentsService.UpdateComment(id, comment);
+                result.IsSuccess = true;
+                result.Message = "Comment updated successfully.";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
             }
         }
 
         [HttpDelete]
         [Route("Delete/{id}")]
 
-        public IActionResult DeleteComment(int id)
+        public ActionResult<ResultViewModel> DeleteComment(int id)
         {
+            var result = new ResultViewModel();
             try
             {
                 _commentsService.DeleteComment(id);
-                 return NoContent(); // 204 No Content
+                 result.IsSuccess = true;
+                result.Message = "Comment deleted successfully.";
+                return Ok(result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                result.IsSuccess = false;
+                result.Message = ex.Message;
+                return StatusCode(500, result);
             }
         }
     }
