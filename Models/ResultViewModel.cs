@@ -3,9 +3,9 @@
 
     public class ResultViewModel<T>
     {
-        public bool IsSuccess;
-        public string? Message;
-        public T? Data;
+        public bool IsSuccess { get; set; }
+        public string? Message { get; set; }
+        public T? Data { get; set; }
 
         public ResultViewModel()
         {
@@ -24,8 +24,8 @@
 
     public class ResultViewModel{
 
-        public bool IsSuccess;
-        public string? Message;
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; }  
         public ResultViewModel()
         {
             IsSuccess = true;
