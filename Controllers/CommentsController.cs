@@ -5,7 +5,7 @@ namespace BlogsAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CommentsController : Controller
+    public class CommentsController : ControllerBase
     {
 
         private readonly ICommentsService _commentsService;

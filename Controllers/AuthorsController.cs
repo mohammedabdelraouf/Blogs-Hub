@@ -7,7 +7,7 @@ namespace BlogsAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthorsController : Controller
+    public class AuthorsController : ControllerBase
     {
         private readonly IAuthorsService _authorsService;
 

@@ -7,7 +7,7 @@ namespace BlogsAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class PostsController : Controller
+    public class PostsController : ControllerBase
     {
         private readonly IPostsService _postsService;
         public PostsController(IPostsService postsService)
