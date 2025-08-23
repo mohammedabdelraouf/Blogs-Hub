@@ -87,7 +87,6 @@ Key features:
 }
 ```
 
----
 
 ## 🛠️ Technologies Used
 - **.NET / ASP.NET Core** → RESTful API framework  
@@ -97,25 +96,7 @@ Key features:
 
 ---
 
-## 📖 Usage
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/BlogsAPI.git
-   ```
-2. Navigate to the project folder:
-   ```bash
-   cd BlogsAPI
-   ```
-3. Run the project:
-   ```bash
-   dotnet run
-   ```
-4. Open Scalar UI in your browser at:
-   ```
-   https://localhost:7244/scalar/v1
-   ```
 
----
 
 ## ✅ Conclusion
 The **BlogsAPI** provides a complete, scalable, and maintainable backend for blogging platforms. It’s ready for frontend integration and future expansion.  
