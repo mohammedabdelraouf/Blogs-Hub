@@ -1,12 +1,14 @@
 ﻿using BlogsAPI.Data;
 using BlogsAPI.Models;
 using BlogsAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogsAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class AuthorsController : ControllerBase
     {
         private readonly IAuthorsService _authorsService;
@@ -18,6 +20,7 @@ namespace BlogsAPI.Controllers
 
         // This controller handles requests related to authors in the blogging API.
         [HttpGet]
+        [AllowAnonymous]
         public  ActionResult<ResultViewModel<IEnumerable<Author>>> GetAuthors()
         {
             var result = new ResultViewModel<IEnumerable<Author>>();
@@ -38,6 +41,7 @@ namespace BlogsAPI.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<ResultViewModel<Author>>> GetAuthor(int id)
         {
             var result = new ResultViewModel<Author>();
@@ -65,6 +69,7 @@ namespace BlogsAPI.Controllers
 
         [HttpGet]
         [Route("{id}/Posts")]
+        [AllowAnonymous]
         public async Task<ActionResult<ResultViewModel<IEnumerable<Post>>>> GetPostsByAuthorId(int id)
         {
             var result = new ResultViewModel<IEnumerable<Post>>();
@@ -86,6 +91,7 @@ namespace BlogsAPI.Controllers
 
         [HttpPost]
         [Route("Add")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<ResultViewModel<Author>> AddAuthor([FromBody] AddAuthorDTO authorDto)
         {
             var result = new ResultViewModel<Author>();
@@ -110,6 +116,7 @@ namespace BlogsAPI.Controllers
         }
 
         [HttpPut("Update/{id}")]
+        [Authorize (Roles = "Admin")]
         public ActionResult<ResultViewModel<Author>> UpdateAuthor(int id, [FromBody] UpdateAuthorDTO updateAuthorDto)
         {
             var result = new ResultViewModel<Author>();
@@ -133,6 +140,7 @@ namespace BlogsAPI.Controllers
             }
         }
         [HttpDelete("Delete/{id}")]
+        [Authorize (Roles = "Admin")]
         public ActionResult<ResultViewModel> DeleteAuthor(int id)
         {
             var result = new ResultViewModel();
