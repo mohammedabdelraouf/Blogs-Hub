@@ -71,7 +71,7 @@ namespace BlogsAPI.Services
                 return tokenHandler.WriteToken(token);
         
             }
-            return null;
+            throw new Exception("Invalid credentials !");
         }
     }
 }

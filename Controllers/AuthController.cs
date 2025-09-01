@@ -6,10 +6,10 @@ namespace BlogsAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AccountController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        public AccountController(IAuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
@@ -17,35 +17,39 @@ namespace BlogsAPI.Controllers
         [HttpPost("register")]
         public ActionResult Register([FromBody] UserDTO registerDTO)
         {
+            var res = new ResultViewModel();
             try
             {
                 _authService.Register(registerDTO.Email, registerDTO.Password, registerDTO.Role);
-                return Ok(new { Message = "User registered successfully" });
+                res.IsSuccess = true;
+                res.Message = "User registered successfully";
+                return Ok(res);
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                res.IsSuccess = false;
+                res.Message = ex.Message;
+                return BadRequest(res);
             }
         }
 
         [HttpPost("login")]
         public ActionResult Login([FromBody] UserDTO loginDTO)
         {
+            var res = new ResultViewModel<string>();
             try
             {
-                var token = _authService.Login(loginDTO.Email, loginDTO.Password);
-                if (token == null)
-                {
-                    return Unauthorized(new { Message = "Invalid credentials" });
-                }
-                else
-                {
-                    return Ok(new { Token = token });
-                }
+                res.Data = _authService.Login(loginDTO.Email, loginDTO.Password);
+                res.IsSuccess = true;
+                res.Message = "Login Successful";
+                return Ok(res);
+               
             }
             catch (Exception ex)
             {
-                return Unauthorized(new { Message = ex.Message });
+                res.IsSuccess = false;
+                res.Message = ex.Message;
+                return Unauthorized(res);
             }
         }
 
